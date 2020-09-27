@@ -10,12 +10,9 @@ public class Codepoint {
 		this.hexaDecimal = hexaDecimal;
 	}
 	
-	public String toUTF32() {
-		String result = "0x";
-		for (int length = this.hexaDecimal.length(); length < 8; length++) {
-			result += "0";
-		}
-		return result += this.hexaDecimal;
+	public int toUTF32() {
+		var result = 0x00000000;
+		return Integer.decode("0x" + this.hexaDecimal) | result;
 	}
 	
 	public String toUTF16() {

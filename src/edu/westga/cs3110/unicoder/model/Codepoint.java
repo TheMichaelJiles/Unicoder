@@ -65,16 +65,16 @@ public class Codepoint {
 		return betweenFirst || betweenSecond;
 	}
 	
-	public int toUTF8() {
+	public String toUTF8() {
 		if (this.hexIsInUTF8OneByteRange(this.codepointAsInt)) {
-			return this.codepointAsInt & 0b11111111;
+			return String.format("%1$02X", this.codepointAsInt);
 		} else if (this.hexIsInUTF8TwoByteRange(this.codepointAsInt)) {
 			int upper = this.codepointAsInt >> 6;
 			int lower = this.codepointAsInt & 0b111111;
 			upper = 0b11000000 + upper;
 			lower = 0b10000000 + lower;
 			int lowerLength = Integer.toBinaryString(lower).length();
-			return lower | (upper << lowerLength);
+			return String.format("%1$04X", lower | (upper << lowerLength));
 		} else if (this.hexIsInUTF8ThreeByteRange(this.codepointAsInt)) {
 			int upper = this.codepointAsInt >> 12;
 			upper = 0b11100000 + upper;
@@ -83,7 +83,7 @@ public class Codepoint {
 			int lower = 0b111111 & this.codepointAsInt;
 			lower = 0b10000000 + lower;
 			int firstTwo = this.appendBinaryStrings(upper, middle);
-			return this.appendBinaryStrings(firstTwo, lower);
+			return String.format("%1$06X", this.appendBinaryStrings(firstTwo, lower));
 		} else {
 			int first = this.codepointAsInt >> 18;
 			first = 0b11110000 + first;
@@ -95,7 +95,7 @@ public class Codepoint {
 			fourth = 0b10000000 + fourth;
 			int firstTwo = this.appendBinaryStrings(first, second);
 			int firstThree = this.appendBinaryStrings(firstTwo, third);
-			return this.appendBinaryStrings(firstThree, fourth);
+			return String.format("%1$08X", this.appendBinaryStrings(firstThree, fourth));
 		}
 	}
 	

@@ -25,5 +25,11 @@ class TestUTF8 {
 		Codepoint codepoint = new Codepoint("4CE3");
 		assertEquals(0xE4B3A3, codepoint.toUTF8());
 	}
+	
+	@Test
+	void testFourBytes() {
+		Codepoint codepoint = new Codepoint("1AB341");
+		assertEquals(0xF6AB8D81, codepoint.toUTF8());
+	}
 
 }

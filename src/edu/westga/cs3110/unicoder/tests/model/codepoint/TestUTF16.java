@@ -14,10 +14,10 @@ class TestUTF16 {
 		assertEquals(0xD6FF, codepoint.toUTF16());
 	}
 	
-//	@Test
-//	void testBetweenUE000AndUFFFF() {
-//		Codepoint codepoint = new Codepoint("0183A5");
-//		assertEquals("0xD820DFA5", codepoint.toUTF16());
-//	}
+	@Test
+	void testBetweenUE000AndUFFFF() {
+		Codepoint codepoint = new Codepoint("0183A5");
+		assertEquals(0xD820DFA5, codepoint.toUTF16());
+	}
 
 }

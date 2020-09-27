@@ -21,8 +21,13 @@ public class Codepoint {
 		if (this.hexIsInUTF16TwoByteRange(this.hexAsInt)) {
 			return this.hexAsInt;
 		} else {
-
-			return 0;
+			int value = this.hexAsInt - 0x10000;
+			int upper = value >> 10;
+			int lower = value & 0b00000000001111111111;
+			int upperSurrogate = 0xD800 + upper;
+			int lowerSurrogate = 0xDC00 + lower;
+			int lowerSurrogateLength = Integer.toBinaryString(lowerSurrogate).length();
+			return lowerSurrogate | (upperSurrogate << lowerSurrogateLength);
 		}
 	}
 	

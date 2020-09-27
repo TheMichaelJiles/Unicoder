@@ -20,21 +20,19 @@ public class Codepoint {
 	}
 	
 	/**
-	 * Encodes the codepoint as UTF32
-	 * @return the encoded codepoint
+	 * Encodes the codepoint in UTF-32 encoding
+	 * @return returns the codepoint in UTF-32 encoding, as an 8-digit hexadecimal string
 	 */
 	public String toUTF32() {
 		return String.format("%1$08X", this.codepointAsInt);
 	}
 	
 	/**
-	 * Encodes the codepoint as UTF16
-	 * @return
+	 * Encodes the codepoint in UTF-16 encoding
+	 * @return returns the codepoint in UTF-16 encoding, as either a 4-digit or 8-digit hexadecimal string (as appropriate)
 	 */
 	public String toUTF16() {
-		
 		if (this.hexIsInUTF16TwoByteRange(this.codepointAsInt)) {
-			System.out.println(String.format("%1$08X", this.codepointAsInt));
 			return String.format("%1$04X", this.codepointAsInt);
 		} else {
 			int value = this.codepointAsInt - 0x10000;
@@ -47,11 +45,6 @@ public class Codepoint {
 		}
 	}
 	
-	/**
-	 * Encoedes
-	 * @param value
-	 * @return
-	 */
 	private boolean hexIsInUTF16TwoByteRange(int value) {
 		int rangeStart = 0x0000;
 		int rangeEnd = 0xD7FF;
@@ -65,6 +58,11 @@ public class Codepoint {
 		return betweenFirst || betweenSecond;
 	}
 	
+	/**
+	 * Encodes the codepoint in UTF-8 encoding
+	 * @return returns the codepoint in UTF-8 encoding, as either a 2-digit, 4-digit, 6-digit, or 8-digit hexadecimal string 
+	 * 		   (as appropriate).
+	 */
 	public String toUTF8() {
 		if (this.hexIsInUTF8OneByteRange(this.codepointAsInt)) {
 			return String.format("%1$02X", this.codepointAsInt);

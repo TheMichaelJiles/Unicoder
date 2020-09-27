@@ -23,20 +23,12 @@ public class Codepoint {
 		} else {
 			int value = this.hexAsInt - 0x10000;
 			int upper = value >> 10;
-			int lower = value & 0b00000000001111111111;
+			int lower = value & 0b1111111111;
 			int upperSurrogate = 0xD800 + upper;
 			int lowerSurrogate = 0xDC00 + lower;
 			int lowerSurrogateLength = Integer.toBinaryString(lowerSurrogate).length();
 			return lowerSurrogate | (upperSurrogate << lowerSurrogateLength);
 		}
-	}
-	
-	private String pad0sTo20(String value) {
-		String zeros = "";
-		for (int length = value.length(); length < 20; length++) {
-			zeros += "0";
-		}
-		return zeros + value;
 	}
 	
 	private boolean hexIsInUTF16TwoByteRange(int value) {
@@ -56,8 +48,12 @@ public class Codepoint {
 		if (this.hexIsInUTF8OneByteRange(this.hexAsInt)) {
 			return this.hexAsInt & 0b11111111;
 		} else if (this.hexIsInUTF8TwoByteRange(this.hexAsInt)) {
-
-			
+			int upper = this.hexAsInt >> 6;
+			int lower = this.hexAsInt & 0b111111;
+			upper = 0b11000000 + upper;
+			lower = 0b10000000 + lower;
+			int lowerLength = Integer.toBinaryString(lower).length();
+			return lower | (upper << lowerLength);
 		}
 		return -1;
 	}

@@ -11,7 +11,10 @@ class TestToUTF32 {
 	@Test
 	void testValidOutput() {
 		Codepoint codepoint = new Codepoint("183A5");
-		assertEquals("000183A5", codepoint.toUTF32());
+		assertTrue(this.assertEqualsIgnoreCase("000183A5", codepoint.toUTF32()));
 	}
-
+	
+	private boolean assertEqualsIgnoreCase(String target, String actual) {
+		return target.equalsIgnoreCase(actual);
+	}
 }

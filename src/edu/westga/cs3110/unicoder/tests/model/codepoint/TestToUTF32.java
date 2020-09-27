@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import edu.westga.cs3110.unicoder.model.Codepoint;
 
+/**
+ * Unit tests for UTF 32
+ * @author Michael Jiles
+ *
+ */
 class TestToUTF32 {
 
 	@Test

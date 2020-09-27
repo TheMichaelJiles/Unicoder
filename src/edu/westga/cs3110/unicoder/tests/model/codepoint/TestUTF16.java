@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import edu.westga.cs3110.unicoder.model.Codepoint;
 
+/**
+ * Unit tests for UTF 16
+ * @author Michael Jiles
+ *
+ */
 class TestUTF16 {
 	
 	@Test

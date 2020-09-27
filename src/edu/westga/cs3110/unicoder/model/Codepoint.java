@@ -2,26 +2,41 @@ package edu.westga.cs3110.unicoder.model;
 
 import java.math.BigInteger;
 
+/**
+ * Class for encoding hex strings to UTF8, 16, or 32
+ * @author Michael Jiles
+ *
+ */
 public class Codepoint {
 	
-	private String hexaDecimal;
-	private int hexAsInt;
+	private int codepointAsInt;
 	
+	/**
+	 * Constructs a new codepoint
+	 * @param hexaDecimal the hex string to be encoded
+	 */
 	public Codepoint(String hexaDecimal) {
-		this.hexaDecimal = hexaDecimal;
-		this.hexAsInt = Integer.decode("0x" + hexaDecimal);
+		this.codepointAsInt = Integer.decode("0x" + hexaDecimal);
 	}
 	
-	public int toUTF32() {
-		return this.hexAsInt;
+	/**
+	 * Encodes the codepoint as UTF32
+	 * @return the encoded codepoint
+	 */
+	public String toUTF32() {
+		return String.format("%1$08X", this.codepointAsInt);
 	}
 	
+	/**
+	 * Encodes the codepoint as UTF16
+	 * @return
+	 */
 	public int toUTF16() {
 		
-		if (this.hexIsInUTF16TwoByteRange(this.hexAsInt)) {
-			return this.hexAsInt;
+		if (this.hexIsInUTF16TwoByteRange(this.codepointAsInt)) {
+			return this.codepointAsInt;
 		} else {
-			int value = this.hexAsInt - 0x10000;
+			int value = this.codepointAsInt - 0x10000;
 			int upper = value >> 10;
 			int lower = value & 0b1111111111;
 			int upperSurrogate = 0xD800 + upper;
@@ -31,6 +46,11 @@ public class Codepoint {
 		}
 	}
 	
+	/**
+	 * Encoedes
+	 * @param value
+	 * @return
+	 */
 	private boolean hexIsInUTF16TwoByteRange(int value) {
 		int rangeStart = 0x0000;
 		int rangeEnd = 0xD7FF;
@@ -45,32 +65,32 @@ public class Codepoint {
 	}
 	
 	public int toUTF8() {
-		if (this.hexIsInUTF8OneByteRange(this.hexAsInt)) {
-			return this.hexAsInt & 0b11111111;
-		} else if (this.hexIsInUTF8TwoByteRange(this.hexAsInt)) {
-			int upper = this.hexAsInt >> 6;
-			int lower = this.hexAsInt & 0b111111;
+		if (this.hexIsInUTF8OneByteRange(this.codepointAsInt)) {
+			return this.codepointAsInt & 0b11111111;
+		} else if (this.hexIsInUTF8TwoByteRange(this.codepointAsInt)) {
+			int upper = this.codepointAsInt >> 6;
+			int lower = this.codepointAsInt & 0b111111;
 			upper = 0b11000000 + upper;
 			lower = 0b10000000 + lower;
 			int lowerLength = Integer.toBinaryString(lower).length();
 			return lower | (upper << lowerLength);
-		} else if (this.hexIsInUTF8ThreeByteRange(this.hexAsInt)) {
-			int upper = this.hexAsInt >> 12;
+		} else if (this.hexIsInUTF8ThreeByteRange(this.codepointAsInt)) {
+			int upper = this.codepointAsInt >> 12;
 			upper = 0b11100000 + upper;
-			int middle = (0b111111000000 & this.hexAsInt) >> 6;
+			int middle = (0b111111000000 & this.codepointAsInt) >> 6;
 			middle = 0b10000000 + middle;
-			int lower = 0b111111 & this.hexAsInt;
+			int lower = 0b111111 & this.codepointAsInt;
 			lower = 0b10000000 + lower;
 			int firstTwo = this.appendBinaryStrings(upper, middle);
 			return this.appendBinaryStrings(firstTwo, lower);
 		} else {
-			int first = this.hexAsInt >> 18;
+			int first = this.codepointAsInt >> 18;
 			first = 0b11110000 + first;
-			int second = (0b111111000000000000 & this.hexAsInt) >> 12;
+			int second = (0b111111000000000000 & this.codepointAsInt) >> 12;
 			second = 0b10000000 + second;
-			int third = (0b111111000000 & this.hexAsInt) >> 6;
+			int third = (0b111111000000 & this.codepointAsInt) >> 6;
 			third = 0b10000000 + third;
-			int fourth = 0b111111 & this.hexAsInt;
+			int fourth = 0b111111 & this.codepointAsInt;
 			fourth = 0b10000000 + fourth;
 			int firstTwo = this.appendBinaryStrings(first, second);
 			int firstThree = this.appendBinaryStrings(firstTwo, third);

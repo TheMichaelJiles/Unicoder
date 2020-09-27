@@ -5,30 +5,24 @@ import java.math.BigInteger;
 public class Codepoint {
 	
 	private String hexaDecimal;
+	private int hexAsInt;
 	
 	public Codepoint(String hexaDecimal) {
 		this.hexaDecimal = hexaDecimal;
+		this.hexAsInt = Integer.decode("0x" + hexaDecimal);
 	}
 	
 	public int toUTF32() {
-		var result = 0x00000000;
-		return Integer.decode("0x" + this.hexaDecimal) | result;
+		return this.hexAsInt;
 	}
 	
-	public String toUTF16() {
-		int value = Integer.decode("0x" + this.hexaDecimal);
+	public int toUTF16() {
 		
-		if (this.hexIsInUTF16TwoByteRange(value)) {
-			return "0x" + this.hexaDecimal;
+		if (this.hexIsInUTF16TwoByteRange(this.hexAsInt)) {
+			return this.hexAsInt;
 		} else {
-			int difference = value - Integer.decode("0x10000");
-			String differenceBinary = Integer.toBinaryString(difference);
-			differenceBinary = this.pad0sTo20(differenceBinary);
-			String upper = differenceBinary.substring(0, 10);
-			String lower = differenceBinary.substring(10, 20);
-			int highSurrogate = Integer.decode("0xD800") + Integer.parseInt(upper, 2);
-			int lowSurrogate = Integer.decode("0xDC00") + Integer.parseInt(lower, 2);
-			return "0x" + Integer.toHexString(highSurrogate).toUpperCase() + Integer.toHexString(lowSurrogate).toUpperCase();
+
+			return 0;
 		}
 	}
 	
@@ -41,11 +35,11 @@ public class Codepoint {
 	}
 	
 	private boolean hexIsInUTF16TwoByteRange(int value) {
-		int rangeStart = Integer.decode("0x0000");
-		int rangeEnd = Integer.decode("0xD7FF");
+		int rangeStart = 0x0000;
+		int rangeEnd = 0xD7FF;
 		
-		int secondRangeStart = Integer.decode("0xE000");
-		int secondRangeEnd = Integer.decode("0xFFFF");
+		int secondRangeStart = 0xE000;
+		int secondRangeEnd = 0xFFFF;
 		
 		boolean betweenFirst = rangeStart <= value && value <= rangeEnd;
 		boolean betweenSecond = secondRangeStart <= value && value <= secondRangeEnd;

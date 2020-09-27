@@ -54,13 +54,25 @@ public class Codepoint {
 			lower = 0b10000000 + lower;
 			int lowerLength = Integer.toBinaryString(lower).length();
 			return lower | (upper << lowerLength);
+		} else if (this.hexIsInUTF8ThreeByteRange(this.hexAsInt)) {
+			int upper = this.hexAsInt >> 12;
+			upper = 0b11100000 + upper;
+			int middle = (0b0000111111000000 & this.hexAsInt) >> 6;
+			middle = 0b10000000 + middle;
+			int lower = 0b111111 & this.hexAsInt;
+			lower = 0b10000000 + lower;
+			
+			int middleLength = Integer.toBinaryString(middle).length();
+			int firstTwo = middle | (upper << middleLength);
+			int lowerLength = Integer.toBinaryString(middle).length();
+			return lower | (firstTwo << lowerLength);
 		}
 		return -1;
 	}
 	
 	private boolean hexIsInUTF8OneByteRange(int value) {
-		int rangeStart = Integer.decode("0x0000");
-		int rangeEnd = Integer.decode("0x007F");
+		int rangeStart = 0x0000;
+		int rangeEnd = 0x007F;
 		
 		boolean isBetween = rangeStart <= value && value <= rangeEnd;
 		
@@ -68,8 +80,17 @@ public class Codepoint {
 	}
 	
 	private boolean hexIsInUTF8TwoByteRange(int value) {
-		int rangeStart = Integer.decode("0x0080");
-		int rangeEnd = Integer.decode("0x07FF");
+		int rangeStart = 0x0080;
+		int rangeEnd = 0x07FF;
+		
+		boolean isBetween = rangeStart <= value && value <= rangeEnd;
+		
+		return isBetween;
+	}
+	
+	private boolean hexIsInUTF8ThreeByteRange(int value) {
+		int rangeStart = 0x0800;
+		int rangeEnd = 0xFFFF;
 		
 		boolean isBetween = rangeStart <= value && value <= rangeEnd;
 		

@@ -1,7 +1,5 @@
 package edu.westga.cs3110.unicoder.model;
 
-import java.math.BigInteger;
-
 /**
  * Class for encoding hex strings to UTF8, 16, or 32
  * @author Michael Jiles
@@ -14,9 +12,25 @@ public class Codepoint {
 	/**
 	 * Constructs a new codepoint
 	 * @param hexaDecimal the hex string to be encoded
+	 * @precondition hexaDecimal must be a valid hex code
+	 * @postcondition this.codepointAsInt == Integer.decode("0x" + hexaDecimal)
 	 */
 	public Codepoint(String hexaDecimal) {
+		try {
+			Integer.parseUnsignedInt(hexaDecimal, 16);
+		} catch (NumberFormatException e){
+			throw new IllegalArgumentException(e.getMessage());
+		}
+		
 		this.codepointAsInt = Integer.decode("0x" + hexaDecimal);
+	}
+	
+	/**
+	 * Returns codepointAsInt
+	 * @return this.codepointAsInt
+	 */
+	public int getCodepointAsInt() {
+		return this.codepointAsInt;
 	}
 	
 	/**

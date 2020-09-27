@@ -52,22 +52,14 @@ public class Codepoint {
 		return betweenFirst || betweenSecond;
 	}
 	
-	public String toUTF8() {
-		int value = Integer.decode("0x" + this.hexaDecimal);
-		String valueAsBinary = Integer.toBinaryString(value);
-		valueAsBinary = this.pad0sTo20(valueAsBinary);
-		
-		if (this.hexIsInUTF8OneByteRange(value)) {
-			String segment = valueAsBinary.substring(12, 20);
-			int result = Integer.parseInt(valueAsBinary, 2);
-			return "0x" + Integer.toHexString(result);
-		} else if (this.hexIsInUTF8TwoByteRange(value)) {
-			String upper = "110" + valueAsBinary.substring(9, 14);
-			String lower = "10" + valueAsBinary.substring(14, 20);
+	public int toUTF8() {
+		if (this.hexIsInUTF8OneByteRange(this.hexAsInt)) {
+			return this.hexAsInt & 0b11111111;
+		} else if (this.hexIsInUTF8TwoByteRange(this.hexAsInt)) {
 
 			
 		}
-		return "";
+		return -1;
 	}
 	
 	private boolean hexIsInUTF8OneByteRange(int value) {

@@ -31,10 +31,11 @@ public class Codepoint {
 	 * Encodes the codepoint as UTF16
 	 * @return
 	 */
-	public int toUTF16() {
+	public String toUTF16() {
 		
 		if (this.hexIsInUTF16TwoByteRange(this.codepointAsInt)) {
-			return this.codepointAsInt;
+			System.out.println(String.format("%1$08X", this.codepointAsInt));
+			return String.format("%1$04X", this.codepointAsInt);
 		} else {
 			int value = this.codepointAsInt - 0x10000;
 			int upper = value >> 10;
@@ -42,7 +43,7 @@ public class Codepoint {
 			int upperSurrogate = 0xD800 + upper;
 			int lowerSurrogate = 0xDC00 + lower;
 			int lowerSurrogateLength = Integer.toBinaryString(lowerSurrogate).length();
-			return lowerSurrogate | (upperSurrogate << lowerSurrogateLength);
+			return String.format("%1$08X", lowerSurrogate | (upperSurrogate << lowerSurrogateLength));
 		}
 	}
 	

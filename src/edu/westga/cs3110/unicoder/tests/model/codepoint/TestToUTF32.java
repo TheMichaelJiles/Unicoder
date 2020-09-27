@@ -14,6 +14,12 @@ class TestToUTF32 {
 		assertTrue(this.assertEqualsIgnoreCase("000183A5", codepoint.toUTF32()));
 	}
 	
+	@Test
+	void testZero() {
+		Codepoint codepoint = new Codepoint("0");
+		assertTrue(this.assertEqualsIgnoreCase("00000000", codepoint.toUTF32()));
+	}
+	
 	private boolean assertEqualsIgnoreCase(String target, String actual) {
 		return target.equalsIgnoreCase(actual);
 	}
